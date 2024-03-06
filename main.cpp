@@ -2,9 +2,11 @@
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include "glsl.h"
 
 using namespace std;
 
+GLuint program_id;
 
 //--------------------------------------------------------------------------------
 // Consts
@@ -23,6 +25,14 @@ void keyboardHandler(unsigned char key, int a, int b)
         glutExit();
 }
 
+// Init shaders
+void InitShaders() {
+    char* vertex_shader = glsl::readFile("vertex_shader.vert");
+    char* fragment_shader = glsl::readFile("fragment_shader.frag");
+    GLuint vsh_id = glsl::makeVertexShader(vertex_shader);
+    GLuint fsh_id = glsl::makeFragmentShader(fragment_shader);
+    program_id = glsl::makeShaderProgram(vsh_id, fsh_id);
+}
 
 //--------------------------------------------------------------------------------
 // Rendering
@@ -30,20 +40,9 @@ void keyboardHandler(unsigned char key, int a, int b)
 
 void Render()
 {
-    // Define background
-    static const GLfloat blue[] = { 0.0, 0.0, 0.4, 1.0 };
-    glClearBufferfv(GL_COLOR, 0, blue);
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(1, 1, 0);
-    glVertex2f(-0.5, -0.5);
-    glColor3f(0, 1, 0);
-    glVertex2f(0.5, -0.5);
-    glColor3f(1, 0, 0);
-    glVertex2f(0, 0.5);
-    glEnd();
-
-    // Swap buffers
+    glUseProgram(program_id);
+    glPointSize(40.0f);
+    glDrawArrays(GL_POINTS, 0, 1);
     glutSwapBuffers();
 }
 
