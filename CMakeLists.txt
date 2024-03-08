@@ -33,8 +33,8 @@ function(compile_shader SHADER_NAME SHADER_TYPE)
 endfunction()
 
 # Compile your shaders (replace "vert" and "frag" with your actual shader file extensions)
-compile_shader(vertex_shader vert)
-compile_shader(fragment_shader frag)
+#compile_shader(vertex_shader vert)
+#compile_shader(fragment_shader frag)
 
 # Add shaders as dependencies for your executable
-add_dependencies(CG_OpenGL vertex_shader_target fragment_shader_target)
+#add_dependencies(CG_OpenGL vertex_shader_target fragment_shader_target)

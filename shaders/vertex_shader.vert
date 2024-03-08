@@ -1,6 +1,15 @@
 #version 430 core
 
+// Outputs
+out vec4 vColor;
+
+// Inputs
+in vec4 position;
+in vec4 color;
+
 void main()
 {
-    gl_Position = vec4(0.4, -0.2, 0.0, 1.0);
+    gl_Position = position;
+
+    vColor = color;
 }
