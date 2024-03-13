@@ -20,6 +20,8 @@ const int WIDTH = 800, HEIGHT = 600;
 const char* fragshader_name = "shaders/fragment_shader.frag";
 const char* vertexshader_name = "shaders/vertex_shader.vert";
 
+unsigned const int DELTA_TIME = 10;
+
 
 //--------------------------------------------------------------------------------
 // Variables
@@ -27,23 +29,27 @@ const char* vertexshader_name = "shaders/vertex_shader.vert";
 
 // ID's
 GLuint program_id;
-GLuint position_id;
-GLuint color_id;
+GLuint vao;
 
-GLuint vbo_vertices;
-GLuint vbo_colors;
 
-const GLfloat vertices[] {
-    0.5, -0.5, 0.0, 1.0,
-    -0.5, -0.5, 0.0, 1.0,
-    0.0, 0.5, 0.0, 1.0
+//--------------------------------------------------------------------------------
+// Mesh variables
+//--------------------------------------------------------------------------------
+
+// Vertices
+const GLfloat vertices[] = {
+    0.5, -0.5, 0.0,
+    -0.5, -0.5, 0.0,
+    0.0, 0.5, 0.0
 };
 
-const GLfloat colors[] {
-    1.0, 0.0, 0.0, 1.0,
-    0.0, 1.0, 0.0, 1.0,
-    0.0, 0.0, 1.0, 1.0,
+// Colors
+const GLfloat colors[] = {
+    1.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f,
+    0.0f, 0.0f, 1.0f
 };
+
 
 //--------------------------------------------------------------------------------
 // Keyboard handling
@@ -63,29 +69,31 @@ void keyboardHandler(unsigned char key, int a, int b)
 void Render()
 {
     // Define background
-    const glm::vec4 blue = glm::vec4(0.0f, 0.0f, 0.4f, 1.0f);
-    glClearBufferfv(GL_COLOR, 0, glm::value_ptr(blue));
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Attach to program_id
     glUseProgram(program_id);
 
-    // Bind vertices
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-    glVertexAttribPointer(position_id, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(position_id);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Bind colors
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glVertexAttribPointer(color_id, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(color_id);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Draw
+    // Send vao
+    glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0);
 
     // Swap buffers
     glutSwapBuffers();
+}
+
+
+//------------------------------------------------------------
+// void Render(int n)
+// Render method that is called by the timer function
+//------------------------------------------------------------
+
+void Render(int n)
+{
+    Render();
+    glutTimerFunc(DELTA_TIME, Render, 0);
 }
 
 
@@ -102,6 +110,7 @@ void InitGlutGlew(int argc, char** argv)
     glutCreateWindow("Hello OpenGL");
     glutDisplayFunc(Render);
     glutKeyboardFunc(keyboardHandler);
+    glutTimerFunc(DELTA_TIME, Render, 0);
 
     glewInit();
 }
@@ -123,7 +132,19 @@ void InitShaders()
     program_id = glsl::makeShaderProgram(vsh_id, fsh_id);
 }
 
-void InitBuffers() {
+
+//------------------------------------------------------------
+// void InitBuffers()
+// Allocates and fills buffers
+//------------------------------------------------------------
+
+void InitBuffers()
+{
+    GLuint position_id;
+    GLuint color_id;
+    GLuint vbo_vertices;
+    GLuint vbo_colors;
+
     // vbo for vertices
     glGenBuffers(1, &vbo_vertices);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
@@ -136,10 +157,32 @@ void InitBuffers() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // get vertex attributes
+    // Get vertex attributes
     position_id = glGetAttribLocation(program_id, "position");
     color_id = glGetAttribLocation(program_id, "color");
+
+    // Allocate memory for vao
+    glGenVertexArrays(1, &vao);
+
+    // Bind to vao
+    glBindVertexArray(vao);
+
+    // Bind vertices to vao
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+    glVertexAttribPointer(position_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(position_id);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Bind colors to vao
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+    glVertexAttribPointer(color_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(color_id);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Stop bind to vao
+    glBindVertexArray(0);
 }
+
 
 int main(int argc, char** argv)
 {
