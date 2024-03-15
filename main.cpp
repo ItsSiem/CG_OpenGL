@@ -12,6 +12,18 @@
 
 using namespace std;
 
+// Light source
+struct LightSource {
+    glm::vec3 position;
+};
+
+// Material
+struct Material {
+    glm::vec3 ambient_color;
+    glm::vec3 diffuse_color;
+    glm::vec3 specular_color;
+    float specular_power;
+};
 
 //--------------------------------------------------------------------------------
 // Consts
@@ -34,11 +46,15 @@ GLuint program_id;
 GLuint vao;
 
 // Uniform ID's
-GLuint uniform_mvp;
+GLuint uniform_mv;
 
 // Matrices
 glm::mat4 model, view, projection;
-glm::mat4 mvp;
+glm::mat4 mv;
+
+// Material & light source
+LightSource light;
+Material material;
 
 
 //--------------------------------------------------------------------------------
@@ -74,13 +90,13 @@ void Render()
 
     // Do transformation
     model = glm::rotate(model, 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
-    mvp = projection * view * model;
+    mv = view * model;
 
     // Attach to program_id
     glUseProgram(program_id);
 
     // Send mvp
-    glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+    glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(mv));
 
     // Send vao
     glBindVertexArray(vao);
@@ -120,8 +136,8 @@ void InitGlutGlew(int argc, char** argv)
     glutTimerFunc(DELTA_TIME, Render, 0);
 
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
-
+    // glDisable(GL_CULL_FACE);
+    glClear(GL_DEPTH_BUFFER_BIT);
     glewInit();
 }
 
@@ -158,12 +174,23 @@ void InitMatrices()
         glm::radians(45.0f),
         1.0f * WIDTH / HEIGHT, 0.1f,
         20.0f);
-    mvp = projection * view * model;
+    mv = view * model;
 }
 
 
 void InitObjects() {
     bool res = loadOBJ("objects/teapot.obj", vertices, uvs, normals);
+}
+
+void InitLights() {
+    light.position = glm::vec3(4.0, 4.0, 4.0);
+}
+
+void InitMaterials() {
+    material.ambient_color = glm::vec3(0.2, 0.2, 0.1);
+    material.diffuse_color = glm::vec3(0.5, 0.5, 0.3);
+    material.specular_color = glm::vec3(0.7, 0.7, 0.7);
+    material.specular_power = 1024;
 }
 
 //------------------------------------------------------------
@@ -174,7 +201,9 @@ void InitObjects() {
 void InitBuffers()
 {
     GLuint position_id;
+    GLuint normal_id;
     GLuint vbo_vertices;
+    GLuint vbo_normals;
 
     // vbo for vertices
     glGenBuffers(1, &vbo_vertices);
@@ -184,8 +213,15 @@ void InitBuffers()
     GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    // vbo for normals
+    glGenBuffers(1, &vbo_normals);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     // Get vertex attributes
     position_id = glGetAttribLocation(program_id, "position");
+    normal_id = glGetAttribLocation(program_id, "normal");
 
     // Allocate memory for vao
     glGenVertexArrays(1, &vao);
@@ -199,18 +235,37 @@ void InitBuffers()
     glEnableVertexAttribArray(position_id);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    // Bind normals to vao
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
+    glVertexAttribPointer(normal_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(normal_id);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     // Stop bind to vao
     glBindVertexArray(0);
 
     // Make uniform vars
-    uniform_mvp = glGetUniformLocation(program_id, "mvp");
+    uniform_mv = glGetUniformLocation(program_id, "mv");
+    GLuint uniform_proj = glGetUniformLocation(program_id, "projection");
+    GLuint uniform_light_pos = glGetUniformLocation(program_id, "light_pos");
+    GLuint uniform_material_ambient = glGetUniformLocation(program_id, "material_ambient");
+    GLuint uniform_material_diffuse = glGetUniformLocation(program_id, "material_diffuse");
+    GLuint uniform_material_specular_color = glGetUniformLocation(program_id, "material_specular_color");
+    GLuint uniform_material_specular_power = glGetUniformLocation(program_id, "material_specular_power");
 
     // Define model
-    // mvp = projection * view * model;
+    mv = view * model;
 
     // Send mvp
     glUseProgram(program_id);
-    // glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+    glUniformMatrix4fv(uniform_mv, 1, GL_FALSE, glm::value_ptr(mv));
+    glUniformMatrix4fv(uniform_proj, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform3fv(uniform_light_pos, 1, glm::value_ptr(light.position));
+    glUniform3fv(uniform_material_ambient, 1, glm::value_ptr(material.ambient_color));
+    glUniform3fv(uniform_material_diffuse, 1, glm::value_ptr(material.diffuse_color));
+    glUniform3fv(uniform_material_specular_color, 1, glm::value_ptr(material.specular_color));
+    glUniform1f(uniform_material_specular_power, material.specular_power);
+
 }
 
 
@@ -219,6 +274,8 @@ int main(int argc, char** argv)
     InitGlutGlew(argc, argv);
     InitShaders();
     InitMatrices();
+    InitLights();
+    InitMaterials();
     InitObjects();
     InitBuffers();
 
