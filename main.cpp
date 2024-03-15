@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "glsl.h"
+#include "objloader.h"
 
 using namespace std;
 
@@ -44,53 +45,10 @@ glm::mat4 mvp;
 // Mesh variables
 //--------------------------------------------------------------------------------
 
-//------------------------------------------------------------
-//
-//           7----------6
-//          /|         /|
-//         / |        / |
-//        /  4-------/--5               y
-//       /  /       /  /                |
-//      3----------2  /                 ----x
-//      | /        | /                 /
-//      |/         |/                  z
-//      0----------1
-//------------------------------------------------------------
+vector<glm::vec3> normals;
+vector<glm::vec3> vertices;
+vector<glm::vec2> uvs;
 
-// Vertices
-const GLfloat vertices[] = {
-    // front
-    -1.0, -1.0, 1.0,
-    1.0, -1.0, 1.0,
-    1.0, 1.0, 1.0,
-    -1.0, 1.0, 1.0,
-    // back
-    -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, 1.0, -1.0,
-    -1.0, 1.0, -1.0,
-};
-
-// Colors
-const GLfloat colors[] = {
-    // front colors
-    1.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 0.0, 1.0,
-    1.0, 1.0, 1.0,
-    // back colors
-    0.0, 1.0, 1.0,
-    1.0, 0.0, 1.0,
-    1.0, 0.0, 0.0,
-    1.0, 1.0, 0.0,
-};
-
-// Elements
-GLushort cube_elements[] = {
-    0,1,1,2,2,3,3,0,  // front
-    0,4,1,5,3,7,2,6,  // front to back
-    4,5,5,6,6,7,7,4   // back
-};
 
 
 //--------------------------------------------------------------------------------
@@ -126,8 +84,7 @@ void Render()
 
     // Send vao
     glBindVertexArray(vao);
-    glDrawElements(GL_LINES, sizeof(cube_elements) / sizeof(GLushort),
-        GL_UNSIGNED_SHORT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
     glBindVertexArray(0);
 
     // Swap buffers
@@ -205,6 +162,10 @@ void InitMatrices()
 }
 
 
+void InitObjects() {
+    bool res = loadOBJ("objects/teapot.obj", vertices, uvs, normals);
+}
+
 //------------------------------------------------------------
 // void InitBuffers()
 // Allocates and fills buffers
@@ -213,33 +174,18 @@ void InitMatrices()
 void InitBuffers()
 {
     GLuint position_id;
-    GLuint color_id;
     GLuint vbo_vertices;
-    GLuint vbo_colors;
-    GLuint ibo_elements;
 
     // vbo for vertices
     glGenBuffers(1, &vbo_vertices);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER,
+    vertices.size() * sizeof(glm::vec3), &vertices[0],
+    GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // vbo for colors
-    glGenBuffers(1, &vbo_colors);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // vbo for elements
-    glGenBuffers(1, &ibo_elements);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_elements);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_elements),
-        cube_elements, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     // Get vertex attributes
     position_id = glGetAttribLocation(program_id, "position");
-    color_id = glGetAttribLocation(program_id, "color");
 
     // Allocate memory for vao
     glGenVertexArrays(1, &vao);
@@ -253,15 +199,6 @@ void InitBuffers()
     glEnableVertexAttribArray(position_id);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    // Bind colors to vao
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glVertexAttribPointer(color_id, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(color_id);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Bind elements to vao
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_elements);
-
     // Stop bind to vao
     glBindVertexArray(0);
 
@@ -269,11 +206,11 @@ void InitBuffers()
     uniform_mvp = glGetUniformLocation(program_id, "mvp");
 
     // Define model
-    mvp = projection * view * model;
+    // mvp = projection * view * model;
 
     // Send mvp
     glUseProgram(program_id);
-    glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
+    // glUniformMatrix4fv(uniform_mvp, 1, GL_FALSE, glm::value_ptr(mvp));
 }
 
 
@@ -282,6 +219,7 @@ int main(int argc, char** argv)
     InitGlutGlew(argc, argv);
     InitShaders();
     InitMatrices();
+    InitObjects();
     InitBuffers();
 
     // Main loop
