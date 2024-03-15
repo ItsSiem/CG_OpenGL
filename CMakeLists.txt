@@ -19,7 +19,10 @@ add_executable(CG_OpenGL main.cpp glsl.h glsl.cpp)
 target_link_libraries(CG_OpenGL ${OPENGL_LIBRARIES} ${GLM_LIBRARIES} GLEW glut)
 
 # Copy shaders to build directory
-file(COPY shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#file(COPY shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_file(vertex_shader.vert ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(fragment_shader.frag ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
 
 # Function to compile GLSL shaders
 function(compile_shader SHADER_NAME SHADER_TYPE)
