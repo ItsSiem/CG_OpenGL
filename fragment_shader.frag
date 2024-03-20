@@ -7,12 +7,15 @@ in VS_OUT{
     vec3 l;
     vec3 v;
 } vs_in;
+in vec2 UV;
 
 // Uniform inputs
 uniform vec3 material_ambient;
 uniform vec3 material_diffuse;
 uniform vec3 material_specular_color;
 uniform float material_specular_power;
+uniform sampler2D texsampler;
+
 
 // Output color
 out vec4 fragColor;
@@ -28,7 +31,7 @@ void main()
      vec3 R = reflect(-L, N);
 
     // Calculate diffuse and specular components for frags
-    vec3 diffuse = max(dot(N, L), 0.0) * material_diffuse;
+    vec3 diffuse = max(dot(N, L), 0.0) * material_diffuse * texture(texsampler, UV).rgb;;
     vec3 specular = pow(max(dot(R,V), 0.0), material_specular_power) * material_specular_color;
 
     // write final fragment to buffer

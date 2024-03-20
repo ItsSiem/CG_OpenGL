@@ -10,6 +10,7 @@ uniform vec3 material_diffuse;
 // Per-vertex inputs
 in vec3 position;
 in vec3 normal;
+in vec2 uv;
 
 // Outputs
 out VS_OUT{
@@ -17,6 +18,8 @@ out VS_OUT{
     vec3 l;
     vec3 v;
 } vs_out;
+out vec2 UV;
+
 
 void main()
 {
@@ -31,6 +34,9 @@ void main()
 
     //calc view vector
      vs_out.v = -p.xyz;
+
+    // pass uv
+    UV = uv;
 
     gl_Position = projection * p;
 }

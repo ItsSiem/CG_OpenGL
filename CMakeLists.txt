@@ -13,7 +13,7 @@ find_package(glm REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
 
 # Add executable
-add_executable(CG_OpenGL main.cpp glsl.h glsl.cpp objloader.cpp objloader.h)
+add_executable(CG_OpenGL main.cpp glsl.h glsl.cpp objloader.cpp objloader.h texture.cpp texture.h)
 
 # Link GLEW and GLUT libraries
 target_link_libraries(CG_OpenGL ${OPENGL_LIBRARIES} ${GLM_LIBRARIES} GLEW glut)
@@ -24,6 +24,7 @@ configure_file(vertex_shader.vert ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(fragment_shader.frag ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 file(COPY objects DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 
 # Function to compile GLSL shaders
