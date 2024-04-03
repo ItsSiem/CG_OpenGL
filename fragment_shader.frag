@@ -1,39 +1,42 @@
 #version 430 core
 
-// Inputs from vertexshader
-in vec3 vColor;
-in VS_OUT{
-    vec3 n;
-    vec3 l;
-    vec3 v;
-} vs_in;
-in vec2 UV;
-
 // Uniform inputs
-uniform vec3 material_ambient;
-uniform vec3 material_diffuse;
-uniform vec3 material_specular_color;
-uniform float material_specular_power;
+uniform vec3 mat_ambient;
+uniform vec3 mat_diffuse;
+uniform vec3 mat_specular;
+uniform float mat_power;
 uniform sampler2D texsampler;
 
+// Inputs from vertexshader
+in VS_OUT
+{
+    vec3 N;
+    vec3 L;
+    vec3 V;
+} fs_in;
+
+in vec2 UV;
 
 // Output color
 out vec4 fragColor;
 
 void main()
 {
-    // Normalize incoming vectors
-    vec3 N = normalize(vs_in.n);
-    vec3 L = normalize(vs_in.l);
-    vec3 V = normalize(vs_in.v);
+    // Normalize the incoming N, L and V vectors
+    vec3 N = normalize(fs_in.N);
+    vec3 L = normalize(fs_in.L);
+    vec3 V = normalize(fs_in.V);
 
-    // Calculate R
-     vec3 R = reflect(-L, N);
+    // Calculate R locally
+    vec3 R = reflect(-L, N);
 
-    // Calculate diffuse and specular components for frags
-    vec3 diffuse = max(dot(N, L), 0.0) * material_diffuse * texture(texsampler, UV).rgb;;
-    vec3 specular = pow(max(dot(R,V), 0.0), material_specular_power) * material_specular_color;
+    // Compute the diffuse and specular components for each fragment
+//    vec3 diffuse = max(dot(N, L), 0.0) * mat_diffuse;
+     vec3 diffuse = max(dot(N, L), 0.0) * texture(texsampler, UV).rgb;
+     vec3 specular = pow(max(dot(R, V), 0.0), mat_power) * mat_specular;
 
-    // write final fragment to buffer
-    fragColor = vec4(material_ambient + diffuse + specular, 1.0);
+    // Write final color to the framebuffer
+    fragColor = vec4(mat_ambient + diffuse + specular, 1.0);
+//    fragColor = vec4(mat_ambient + diffuse, 1.0);
 }
+

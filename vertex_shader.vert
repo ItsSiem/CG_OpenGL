@@ -4,39 +4,39 @@
 uniform mat4 mv;
 uniform mat4 projection;
 uniform vec3 light_pos;
-uniform vec3 material_ambient;
-uniform vec3 material_diffuse;
 
 // Per-vertex inputs
 in vec3 position;
 in vec3 normal;
-in vec2 uv;
 
-// Outputs
-out VS_OUT{
-    vec3 n;
-    vec3 l;
-    vec3 v;
-} vs_out;
+in vec2 uv;
 out vec2 UV;
 
+// Outputs
+out VS_OUT
+{
+   vec3 N;
+   vec3 L;
+   vec3 V;
+} vs_out;
 
 void main()
 {
-    // calculate view-space
-    vec4 p = mv * vec4(position, 1.0);
+    // Calculate view-space coordinate
+    vec4 P = mv * vec4(position, 1.0);
 
-    // normal in view-space
-    vs_out.n = mat3(mv) * normal;
+    // Calculate normal in view-space
+    vs_out.N = mat3(mv) * normal;
 
-    // light source in view-space
-    vs_out.l = light_pos - p.xyz;
+    // Calculate light vector
+    vs_out.L = light_pos - P.xyz;
 
-    //calc view vector
-     vs_out.v = -p.xyz;
+    // Calculate view vector;
+     vs_out.V = -P.xyz;
 
-    // pass uv
+    // Calculate the clip-space position of each vertex
+    gl_Position = projection * P;
+    
     UV = uv;
-
-    gl_Position = projection * p;
 }
+
