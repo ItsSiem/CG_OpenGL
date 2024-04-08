@@ -36,7 +36,7 @@ void main()
 
     // Calculate the clip-space position of each vertex
     gl_Position = projection * P;
-    
+    // gl_Position = vec4(position, 1.0);
     UV = uv;
 }
 

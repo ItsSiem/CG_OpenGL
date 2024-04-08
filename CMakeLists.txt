@@ -13,7 +13,12 @@ find_package(glm REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
 
 # Add executable
-add_executable(CG_OpenGL main.cpp glsl.h glsl.cpp objloader.cpp objloader.h texture.cpp texture.h)
+add_executable(CG_OpenGL src/main.cpp src/glsl.h src/glsl.cpp src/objloader.cpp src/objloader.h src/texture.cpp src/texture.h
+        src/game_object.cpp
+        src/game_object.h
+        src/Material.h
+        src/Light.h
+        src/globals.h)
 
 # Link GLEW and GLUT libraries
 target_link_libraries(CG_OpenGL ${OPENGL_LIBRARIES} ${GLM_LIBRARIES} GLEW glut)

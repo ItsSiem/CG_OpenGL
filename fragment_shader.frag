@@ -36,7 +36,8 @@ void main()
      vec3 specular = pow(max(dot(R, V), 0.0), mat_power) * mat_specular;
 
     // Write final color to the framebuffer
-    fragColor = vec4(mat_ambient + diffuse + specular, 1.0);
+     fragColor = vec4(mat_ambient + diffuse + specular, 1.0);
 //    fragColor = vec4(mat_ambient + diffuse, 1.0);
+   // fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 
