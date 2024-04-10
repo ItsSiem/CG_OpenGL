@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <assimp/Importer.hpp>
+
 #include "glsl.h"
 #include "objloader.h"
 #include "texture.h"
@@ -25,6 +27,15 @@ void keyboardHandler(unsigned char key, int a, int b)
 {
     if (key == 27)
         glutExit();
+    if (key == 'w')
+        player.Update(key);
+    if (key == 's')
+        player.Update(key);
+    if (key == 'a')
+        player.Update(key);
+    if (key == 'd')
+        player.Update(key);
+
 }
 
 void Render()
@@ -63,9 +74,12 @@ void Render()
 
 void Render(int n)
 {
+    player.Update();
     Render();
     glutTimerFunc(DELTA_TIME, Render, 0);
 }
+
+
 
 void InitGlutGlew(int argc, char** argv)
 {

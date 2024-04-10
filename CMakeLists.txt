@@ -18,7 +18,9 @@ add_executable(CG_OpenGL src/main.cpp src/glsl.h src/glsl.cpp src/objloader.cpp 
         src/game_object.h
         src/Material.h
         src/Light.h
-        src/globals.h)
+        src/globals.h
+        src/player.cpp
+        src/player.h)
 
 # Link GLEW and GLUT libraries
 target_link_libraries(CG_OpenGL ${OPENGL_LIBRARIES} ${GLM_LIBRARIES} GLEW glut)

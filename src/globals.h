@@ -5,10 +5,12 @@
 #ifndef CG_OPENGL_GLOBALS_H
 #define CG_OPENGL_GLOBALS_H
 
+#include <GL/glew.h>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include "Light.h"
+#include "player.h"
 
 const int WIDTH = 2000, HEIGHT = 1000;
 
@@ -17,12 +19,14 @@ const glm::mat4 projection = glm::perspective(
         1.0f * WIDTH / HEIGHT, 0.1f,
         20.0f);
 
-const glm::mat4 view = glm::lookAt(
+inline glm::mat4 view = glm::lookAt(
         glm::vec3(0.0, 2.0, 8.0),
         glm::vec3(0.0, 0.5, 0.0),
         glm::vec3(0.0, 1.0, 0.0));
 
 const Light light {.position = glm::vec3(4.0, 4.0, 4.0)};
+
+inline player player;
 
 inline GLuint program_id;
 
