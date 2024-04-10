@@ -10,7 +10,7 @@
 #include <glm/ext/matrix_transform.hpp>
 #include "Light.h"
 
-const int WIDTH = 800, HEIGHT = 800;
+const int WIDTH = 2000, HEIGHT = 1000;
 
 const glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),

@@ -23,12 +23,16 @@ public:
     glm::mat4 mv;
 private:
     GLuint vao;
+    void InitBuffers();
 public:
     GameObject();
+    GameObject(const char* obj_file, const glm::vec3 color = glm::vec3(0, 0, 0));
+    GameObject(Material material, glm::mat4 model_transformation);
     void Render();
-
-    void InitBuffers();
-    void InitMatrices(glm::vec3 transform);
+    void Transform(glm::mat4);
+    void Translate(glm::vec3);
+    void Rotate(float angle, glm::vec3 axis);
+    void Scale(float sx, float sy, float sz);
 };
 
 

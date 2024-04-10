@@ -94,59 +94,26 @@ void InitShaders()
     program_id = glsl::makeShaderProgram(vsh_id, fsh_id);
 }
 
-void InitMatrices()
-{
-    int x = -2, y = 0, z = 0;
-    for (int i = 0; i < objects.size(); i++)
-        objects[i].InitMatrices(glm::vec3(x++, y, z));
-}
-
 void CreateObjects() {
-    objects = {GameObject(), GameObject(), GameObject()};
-}
+    GameObject cube;
+    cube.material = Material {.ambient_color = glm::vec3(0, 0, 0), .diffuse_color = glm::vec3(0, 0, 0), .specular_color = glm::vec3(0, 0, 0), .specular_power = 50};
+    cube.Rotate(45, glm::vec3(0, 1, 0));
+    cube.Translate(glm::vec3(1, 0, 0));
+    cube.Scale(3, 0.1, 3);
+    loadOBJ("objects/box.obj", cube.vertices, cube.uvs, cube.normals);
+    cube.material.texture = loadBMP("textures/blank.bmp");
 
-void InitObjects()
-{
-    // Objects
-    int i = 0;
-    loadOBJ("objects/teapot.obj", objects[i].vertices, objects[i].uvs, objects[i].normals);
-    i++;
-    loadOBJ("objects/torus.obj", objects[i].vertices, objects[i].uvs, objects[i].normals);
-    i++;
-    loadOBJ("objects/box.obj", objects[i].vertices, objects[i].uvs, objects[i].normals);
-    objects[0].material.texture = loadBMP("textures/Yellobrk.bmp");
-    objects[1].material.texture = loadBMP("textures/uvtemplate.bmp");
-    objects[2].material.texture = loadBMP("textures/uvtemplate.bmp");
-}
+    objects.push_back(cube);
 
-void InitMaterialsLight()
-{
-    for (int i = 0; i < objects.size(); i++)
-    {
-        objects[i].material.ambient_color = glm::vec3(0.2, 0.2, 0.1);
-        objects[i].material.diffuse_color = glm::vec3(0.5, 0.5, 0.3);
-        objects[i].material.specular_color = glm::vec3(0.5, 0.5, 0.5);
-        objects[i].material.specular_power = 50.0;
-    }
+    GameObject cube2("objects/box.obj", glm::vec3(0.3, 0.1, 0.2));
+//    objects.push_back(cube2);
 }
-
-void InitBuffers()
-{
-    for (int i = 0; i < objects.size(); i++) {
-        objects[i].InitBuffers();
-    }
-}
-
 
 int main(int argc, char** argv)
 {
     InitGlutGlew(argc, argv);
     InitShaders();
     CreateObjects();
-    InitObjects();
-    InitMatrices();
-    InitMaterialsLight();
-    InitBuffers();
 
     // Main loop
     glutMainLoop();
