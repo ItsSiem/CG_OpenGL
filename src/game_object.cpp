@@ -12,6 +12,7 @@
 
 GameObject::GameObject(const glm::vec3 pos) {
     model_transformation = glm::mat4(1);
+    position = pos;
     Translate(pos);
 }
 
@@ -20,6 +21,7 @@ GameObject::GameObject(const char *obj_file, const glm::vec3 position, const glm
                 .texture = loadBMP("textures/blank.bmp")},
         glm::mat4(1)) {
     loadOBJ(obj_file, vertices, uvs, normals);
+    this->position = position;
     Translate(position);
 }
 

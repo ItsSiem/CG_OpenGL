@@ -102,40 +102,43 @@ void InitShaders()
 }
 
 void CreateObjects() {
-    GameObject cube(glm::vec3(0, 0, 0));
-    cube.material = Material {.ambient_color = glm::vec3(0, 0, 0), .diffuse_color = glm::vec3(0, 0, 0), .specular_color = glm::vec3(0, 0, 0), .specular_power = 50};
-    cube.Rotate(45, glm::vec3(0, 1, 0));
-    cube.Translate(glm::vec3(1, 0, 0));
-    cube.Scale(10, 1, 10);
-    loadOBJ("objects/box.obj", cube.vertices, cube.uvs, cube.normals);
-    cube.material.texture = loadBMP("textures/blank.bmp");
-
+    GameObject cube("objects/box.obj", glm::vec3(0, 0, 0));
+    cube.Scale(10, 0.0001, 10);
     objects.push_back(cube);
 
-    GameObject desk("objects/desk.obj", glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
-    desk.Scale(0.0005, 0.0005, 0.0005);
+    float revit_scale = 1 / 1000.0f;
+
+    GameObject desk("objects/desk.obj", glm::vec3(0, 0, -3), glm::vec3(0, 1, 0));
+    desk.Scale(revit_scale, revit_scale, revit_scale);
     desk.Rotate(-90, glm::vec3(1, 0, 0));
-    desk.Rotate(45, glm::vec3(0, 0, 1));
     objects.push_back(desk);
 
     // Todo: house.obj is too powerful for our mortal parser
-    GameObject house("objects/house.obj", glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
-    house.Scale(0.0005, 0.0005, 0.0005);
+    GameObject house("objects/house.obj", glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    house.Scale(revit_scale, revit_scale, revit_scale);
     house.Rotate(-90, glm::vec3(1, 0, 0));
-    house.Rotate(45, glm::vec3(0, 0, 1));
     objects.push_back(house);
 
-    GameObject coffee_table("objects/coffee_table.obj", glm::vec3(0, 1, 2), glm::vec3(1, 1, 0));
-    coffee_table.Scale(0.0005, 0.0005, 0.0005);
+    GameObject coffee_table("objects/coffee_table.obj", glm::vec3(0, 0, 2), glm::vec3(1, 1, 0));
+    coffee_table.Scale(revit_scale, revit_scale, revit_scale);
     coffee_table.Rotate(-90, glm::vec3(1, 0, 0));
-    coffee_table.Rotate(45, glm::vec3(0, 0, 1));
     objects.push_back(coffee_table);
 
+    GameObject teapot("objects/teapot.obj", coffee_table.position + glm::vec3(0, 0.43, 0));
+    teapot.Scale(0.1, 0.1, 0.1);
+    Material shiny = {
+            .ambient_color = glm::vec3(0.0, 0.0, 0.0),
+            .diffuse_color = glm::vec3(0.2, 0.2, 0.2),
+            .specular_color = glm::vec3(0.7, 0.7, 0.7),
+            .specular_power = 250,
+            .texture = loadBMP("textures/Yellobrk.bmp")
+    };
+    teapot.material = shiny;
+    objects.push_back(teapot);
 
-    GameObject sofa("objects/sofa.obj", glm::vec3(3, 1, 0), glm::vec3(0, 0, 1));
-    sofa.Scale(0.0005, 0.0005, 0.0005);
+    GameObject sofa("objects/sofa.obj", glm::vec3(3, 0, 0), glm::vec3(0, 0, 1));
+    sofa.Scale(revit_scale, revit_scale, revit_scale);
     sofa.Rotate(-90, glm::vec3(1, 0, 0));
-    sofa.Rotate(45, glm::vec3(0, 0, 1));
     objects.push_back(sofa);
 }
 
