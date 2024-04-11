@@ -20,10 +20,11 @@ public:
     player();
     void Update(const char key = '\0');
 private:
-    glm::mat4 viewMatrix();
+    glm::mat4 viewMatrix() const;
     void processInput(const char key);
-    void processWalk(const char key);
-    void processDrone(const char key);
+    void processWalkMovement(const char key);
+    void processDroneMovement(const char key);
+    void processHeading(const char key);
 
 };
 

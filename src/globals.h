@@ -19,10 +19,7 @@ const glm::mat4 projection = glm::perspective(
         1.0f * WIDTH / HEIGHT, 0.1f,
         20.0f);
 
-inline glm::mat4 view = glm::lookAt(
-        glm::vec3(0.0, 2.0, 8.0),
-        glm::vec3(0.0, 0.5, 0.0),
-        glm::vec3(0.0, 1.0, 0.0));
+inline glm::mat4 view;
 
 const Light light {.position = glm::vec3(4.0, 4.0, 4.0)};
 
