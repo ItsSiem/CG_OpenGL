@@ -8,16 +8,19 @@
 #include "globals.h"
 #include "objloader.h"
 #include "texture.h"
+#include "utils.h"
 
-GameObject::GameObject() {
+GameObject::GameObject(const glm::vec3 pos) {
     model_transformation = glm::mat4(1);
+    Translate(pos);
 }
 
-GameObject::GameObject(const char *obj_file, const glm::vec3 color) : GameObject(
+GameObject::GameObject(const char *obj_file, const glm::vec3 position, const glm::vec3 color) : GameObject(
         Material{.ambient_color = color, .diffuse_color = color, .specular_color = color, .specular_power = 50,
                 .texture = loadBMP("textures/blank.bmp")},
         glm::mat4(1)) {
     loadOBJ(obj_file, vertices, uvs, normals);
+    Translate(position);
 }
 
 GameObject::GameObject(Material material, glm::mat4 model_transformation) {
@@ -115,7 +118,7 @@ void GameObject::Translate(glm::vec3 translate) {
 }
 
 void GameObject::Rotate(float angle, glm::vec3 axis) {
-    Transform(glm::rotate(glm::mat4(1), angle, axis));
+    Transform(glm::rotate(glm::mat4(1), DegToRad(angle), axis));
 }
 
 void GameObject::Scale(float sx, float sy, float sz) {

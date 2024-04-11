@@ -17,7 +17,7 @@ const int WIDTH = 2000, HEIGHT = 1000;
 const glm::mat4 projection = glm::perspective(
         glm::radians(45.0f),
         1.0f * WIDTH / HEIGHT, 0.1f,
-        20.0f);
+        20000.0f);
 
 inline glm::mat4 view;
 

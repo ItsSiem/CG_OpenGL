@@ -21,12 +21,13 @@ public:
     Material material;
     glm::mat4 model_transformation;
     glm::mat4 mv;
+    glm::vec3 position;
 private:
     GLuint vao;
     void InitBuffers();
 public:
-    GameObject();
-    GameObject(const char* obj_file, const glm::vec3 color = glm::vec3(0, 0, 0));
+    GameObject(glm::vec3 pos);
+    GameObject(const char* obj_file, const glm::vec3 position, const glm::vec3 color = glm::vec3(0, 0, 0));
     GameObject(Material material, glm::mat4 model_transformation);
     void Render();
     void Transform(glm::mat4);

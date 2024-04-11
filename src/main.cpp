@@ -102,18 +102,41 @@ void InitShaders()
 }
 
 void CreateObjects() {
-    GameObject cube;
+    GameObject cube(glm::vec3(0, 0, 0));
     cube.material = Material {.ambient_color = glm::vec3(0, 0, 0), .diffuse_color = glm::vec3(0, 0, 0), .specular_color = glm::vec3(0, 0, 0), .specular_power = 50};
     cube.Rotate(45, glm::vec3(0, 1, 0));
     cube.Translate(glm::vec3(1, 0, 0));
-    cube.Scale(25, 0.1, 25);
+    cube.Scale(10, 1, 10);
     loadOBJ("objects/box.obj", cube.vertices, cube.uvs, cube.normals);
     cube.material.texture = loadBMP("textures/blank.bmp");
 
     objects.push_back(cube);
 
-    GameObject cube2("objects/box.obj", glm::vec3(0.3, 0.1, 0.2));
-//    objects.push_back(cube2);
+    GameObject desk("objects/desk.obj", glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+    desk.Scale(0.0005, 0.0005, 0.0005);
+    desk.Rotate(-90, glm::vec3(1, 0, 0));
+    desk.Rotate(45, glm::vec3(0, 0, 1));
+    objects.push_back(desk);
+
+    // Todo: house.obj is too powerful for our mortal parser
+    GameObject house("objects/house.obj", glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+    house.Scale(0.0005, 0.0005, 0.0005);
+    house.Rotate(-90, glm::vec3(1, 0, 0));
+    house.Rotate(45, glm::vec3(0, 0, 1));
+    objects.push_back(house);
+
+    GameObject coffee_table("objects/coffee_table.obj", glm::vec3(0, 1, 2), glm::vec3(1, 1, 0));
+    coffee_table.Scale(0.0005, 0.0005, 0.0005);
+    coffee_table.Rotate(-90, glm::vec3(1, 0, 0));
+    coffee_table.Rotate(45, glm::vec3(0, 0, 1));
+    objects.push_back(coffee_table);
+
+
+    GameObject sofa("objects/sofa.obj", glm::vec3(3, 1, 0), glm::vec3(0, 0, 1));
+    sofa.Scale(0.0005, 0.0005, 0.0005);
+    sofa.Rotate(-90, glm::vec3(1, 0, 0));
+    sofa.Rotate(45, glm::vec3(0, 0, 1));
+    objects.push_back(sofa);
 }
 
 int main(int argc, char** argv)

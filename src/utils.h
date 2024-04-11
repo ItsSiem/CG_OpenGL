@@ -7,7 +7,7 @@
 
 #include <cmath>
 
-float DegToRad(const float a) {
+inline float DegToRad(const float a) {
     return a * (M_PI / 180.0f);
 }
 
