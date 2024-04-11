@@ -9,14 +9,12 @@
 
 player::player() {
     position = glm::vec3(0.0, walk_height, 0.0);
-    heading = glm::vec3(1, 0, 1);
-    drone_mode = true;
+    heading = glm::vec3(0, 0, 1);
+    drone_mode = false;
 }
 
 void player::Update(const char key) {
-    if(key != '\0')
-        processInput(key);
-
+    processInput(key);
     view = viewMatrix();
 }
 
@@ -25,6 +23,8 @@ glm::mat4 player::viewMatrix() const {
 }
 
 void player::processInput(const char key) {
+    if (key == 'v')
+        toggleDrone();
     if(drone_mode)
         processDroneMovement(key);
     else
@@ -80,4 +80,17 @@ void player::processHeading(const char key) {
     if (key == 'l')
         rotation_matrix = glm::rotate(glm::mat4(1), -rotate_step, glm::vec3(0, 1, 0));
     heading = glm::vec3( rotation_matrix * glm::vec4(heading, 1));
+}
+
+void player::toggleDrone() {
+    if (drone_mode) {
+        position = walk_position;
+        heading = walk_heading;
+    } else {
+        walk_position = position;
+        walk_heading = heading;
+        position = drone_position;
+        heading = drone_heading;
+    }
+    drone_mode = !drone_mode;
 }

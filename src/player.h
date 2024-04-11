@@ -13,6 +13,10 @@ class player {
 private:
     bool drone_mode;
     const float walk_height = 1.75;
+    glm::vec3 walk_position;
+    glm::vec3 walk_heading;
+    const glm::vec3 drone_position = glm::vec3(3, 5, 3);
+    const glm::vec3 drone_heading = glm::vec3(0, -1 , -1);
 public:
     glm::vec3 position;
     glm::vec3 heading;
@@ -25,7 +29,7 @@ private:
     void processWalkMovement(const char key);
     void processDroneMovement(const char key);
     void processHeading(const char key);
-
+    void toggleDrone();
 };
 
 
