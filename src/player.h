@@ -10,6 +10,9 @@
 #include <glm/glm.hpp>
 
 class player {
+private:
+    bool drone_mode;
+    const float walk_height = 1.75;
 public:
     glm::vec3 position;
     glm::vec3 heading;
@@ -19,6 +22,8 @@ public:
 private:
     glm::mat4 viewMatrix();
     void processInput(const char key);
+    void processWalk(const char key);
+    void processDrone(const char key);
 
 };
 
