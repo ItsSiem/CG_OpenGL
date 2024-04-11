@@ -27,14 +27,7 @@ void keyboardHandler(unsigned char key, int a, int b)
 {
     if (key == 27)
         glutExit();
-    if (key == 'w')
-        player.Update(key);
-    if (key == 's')
-        player.Update(key);
-    if (key == 'a')
-        player.Update(key);
-    if (key == 'd')
-        player.Update(key);
+    player.Update(key);
 
 }
 
@@ -113,7 +106,7 @@ void CreateObjects() {
     cube.material = Material {.ambient_color = glm::vec3(0, 0, 0), .diffuse_color = glm::vec3(0, 0, 0), .specular_color = glm::vec3(0, 0, 0), .specular_power = 50};
     cube.Rotate(45, glm::vec3(0, 1, 0));
     cube.Translate(glm::vec3(1, 0, 0));
-    cube.Scale(3, 0.1, 3);
+    cube.Scale(25, 0.1, 25);
     loadOBJ("objects/box.obj", cube.vertices, cube.uvs, cube.normals);
     cube.material.texture = loadBMP("textures/blank.bmp");
 
