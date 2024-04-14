@@ -21,7 +21,7 @@ struct Material
 inline Material default_material = {
         .ambient_color = glm::vec3(0.5, 0.5, 0.5),
         .diffuse_color = glm::vec3(0.3, 0.3, 0.3),
-        .specular_color = glm::vec3(0.7, 0.7, 0.7),
+        .specular_color = glm::vec3(0.1, 0.1, 0.1),
         .specular_power = 50,
         .texture = loadBMP("textures/uvtemplate.bmp"),
         };

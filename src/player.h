@@ -13,8 +13,8 @@ class player {
 private:
     bool drone_mode;
     const float walk_height = 1.75;
-    glm::vec3 walk_position;
-    glm::vec3 walk_heading;
+    glm::vec3 walk_position = glm::vec3(-8, walk_height, 3);
+    glm::vec3 walk_heading = glm::vec3(1, 0, -1);
     const glm::vec3 drone_position = glm::vec3(-5, 5, -5);
     const glm::vec3 drone_heading = glm::vec3(2, -2 , 2);
 public:

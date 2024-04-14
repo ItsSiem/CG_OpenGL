@@ -21,7 +21,7 @@ const glm::mat4 projection = glm::perspective(
 
 inline glm::mat4 view;
 
-const Light light {.position = glm::vec3(4.0, 4.0, 4.0)};
+const Light light {.position = glm::vec3(2.0, 4.0, 6.0)};
 
 inline player player;
 

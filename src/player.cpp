@@ -8,8 +8,8 @@
 #include "utils.h"
 
 player::player() {
-    position = glm::vec3(0.0, walk_height, 0.0);
-    heading = glm::vec3(0, 0, 1);
+    position = walk_position;
+    heading = walk_heading;
     drone_mode = false;
 }
 
@@ -71,6 +71,7 @@ void player::processHeading(const char key) {
     glm::vec3 normalized_heading = glm::normalize(heading);
     float rotate_step = DegToRad(1);
     glm::mat4 rotation_matrix(1);
+    // Todo evil i & k rotation does weird things
     if (key == 'i')
         rotation_matrix = glm::rotate(glm::mat4(1), -rotate_step, glm::vec3(1, 0, 0));
     if (key == 'k')
