@@ -7,6 +7,7 @@
 
 #include <glm/vec3.hpp>
 #include <GL/glew.h>
+#include "texture.h"
 
 struct Material
 {
@@ -16,5 +17,13 @@ struct Material
     float specular_power;
     GLuint texture;
 };
+
+inline Material default_material = {
+        .ambient_color = glm::vec3(0.5, 0.5, 0.5),
+        .diffuse_color = glm::vec3(0.3, 0.3, 0.3),
+        .specular_color = glm::vec3(0.7, 0.7, 0.7),
+        .specular_power = 50,
+        .texture = loadBMP("textures/uvtemplate.bmp"),
+        };
 
 #endif //CG_OPENGL_MATERIAL_H

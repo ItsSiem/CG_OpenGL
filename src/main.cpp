@@ -13,6 +13,7 @@
 #include "texture.h"
 #include "game_object.h"
 #include "globals.h"
+#include "Cube.h"
 
 using namespace std;
 
@@ -102,29 +103,30 @@ void InitShaders()
 }
 
 void CreateObjects() {
-    GameObject cube("objects/box.obj", glm::vec3(0, 0, 0));
-    cube.Scale(10, 0.0001, 10);
+    GameObject ground("objects/box.obj", glm::vec3(0, 0, 0), default_material);
+    ground.material.texture = loadBMP("textures/uvtemplate.bmp");
+    ground.Scale(10, 0.0001, 10);
+    objects.push_back(ground);
+
+    Cube cube(glm::vec3(1, 1, 1), glm::vec3(0, 0, 0));
+    cube.material.texture = loadBMP("textures/uvtemplate.bmp");
     objects.push_back(cube);
 
     float revit_scale = 1 / 1000.0f;
 
-    GameObject desk("objects/desk.obj", glm::vec3(0, 0, -3), glm::vec3(0, 1, 0));
+    GameObject desk("objects/desk.obj", glm::vec3(0, 0, -3), default_material);
+    desk.material.texture = loadBMP("textures/uvtemplate.bmp");
     desk.Scale(revit_scale, revit_scale, revit_scale);
     desk.Rotate(-90, glm::vec3(1, 0, 0));
     objects.push_back(desk);
 
-    // Todo: house.obj is too powerful for our mortal parser
-    GameObject house("objects/house.obj", glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    house.Scale(revit_scale, revit_scale, revit_scale);
-    house.Rotate(-90, glm::vec3(1, 0, 0));
-    objects.push_back(house);
-
-    GameObject coffee_table("objects/coffee_table.obj", glm::vec3(0, 0, 2), glm::vec3(1, 1, 0));
+    GameObject coffee_table("objects/coffee_table.obj", glm::vec3(0, 0, 2), default_material);
+    coffee_table.material.texture = loadBMP("textures/uvtemplate.bmp");
     coffee_table.Scale(revit_scale, revit_scale, revit_scale);
     coffee_table.Rotate(-90, glm::vec3(1, 0, 0));
     objects.push_back(coffee_table);
 
-    GameObject teapot("objects/teapot.obj", coffee_table.position + glm::vec3(0, 0.43, 0));
+    GameObject teapot("objects/teapot.obj", coffee_table.position + glm::vec3(0, 0.43, 0), default_material);
     teapot.Scale(0.1, 0.1, 0.1);
     Material shiny = {
             .ambient_color = glm::vec3(0.0, 0.0, 0.0),
@@ -136,10 +138,18 @@ void CreateObjects() {
     teapot.material = shiny;
     objects.push_back(teapot);
 
-    GameObject sofa("objects/sofa.obj", glm::vec3(3, 0, 0), glm::vec3(0, 0, 1));
+    GameObject sofa("objects/sofa.obj", glm::vec3(3, 0, 0), default_material);
+    sofa.material.texture = loadBMP("textures/uvtemplate.bmp");
     sofa.Scale(revit_scale, revit_scale, revit_scale);
     sofa.Rotate(-90, glm::vec3(1, 0, 0));
     objects.push_back(sofa);
+}
+
+void InitBuffers() {
+    for (int i = 0; i < objects.size(); ++i) {
+        objects[i].InitBuffers();
+    }
+
 }
 
 int main(int argc, char** argv)
@@ -147,6 +157,7 @@ int main(int argc, char** argv)
     InitGlutGlew(argc, argv);
     InitShaders();
     CreateObjects();
+    InitBuffers();
 
     // Main loop
     glutMainLoop();

@@ -24,15 +24,16 @@ public:
     glm::vec3 position;
 private:
     GLuint vao;
-    void InitBuffers();
 public:
     GameObject(glm::vec3 pos);
-    GameObject(const char* obj_file, const glm::vec3 position, const glm::vec3 color = glm::vec3(0, 0, 0));
-    GameObject(Material material, glm::mat4 model_transformation);
+    GameObject(const char* obj_file, const glm::vec3 position, const Material material);
+    GameObject(const glm::vec3 position, const Material material);
+    void InitBuffers();
     void Render();
     void Transform(glm::mat4);
     void Translate(glm::vec3);
     void Rotate(float angle, glm::vec3 axis);
+    void Scale(glm::vec3 scale);
     void Scale(float sx, float sy, float sz);
 };
 

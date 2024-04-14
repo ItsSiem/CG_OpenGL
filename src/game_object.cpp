@@ -7,31 +7,24 @@
 #include "game_object.h"
 #include "globals.h"
 #include "objloader.h"
-#include "texture.h"
 #include "utils.h"
 
-GameObject::GameObject(const glm::vec3 pos) {
-    model_transformation = glm::mat4(1);
-    position = pos;
-    Translate(pos);
+GameObject::GameObject(glm::vec3 pos) : GameObject(pos, default_material){
 }
 
-GameObject::GameObject(const char *obj_file, const glm::vec3 position, const glm::vec3 color) : GameObject(
-        Material{.ambient_color = color, .diffuse_color = color, .specular_color = color, .specular_power = 50,
-                .texture = loadBMP("textures/blank.bmp")},
-        glm::mat4(1)) {
+GameObject::GameObject(const char *obj_file, const glm::vec3 position, const Material material) : GameObject(position, material){
     loadOBJ(obj_file, vertices, uvs, normals);
+}
+
+GameObject::GameObject(const glm::vec3 position, const Material material) {
     this->position = position;
+    this->material = material;
+    this->model_transformation = glm::mat4(1);
     Translate(position);
 }
 
-GameObject::GameObject(Material material, glm::mat4 model_transformation) {
-    this->material = material;
-    this->model_transformation = model_transformation;
-}
-
 void GameObject::Render() {
-    InitBuffers();
+
     mv = view * model_transformation;
     glBindTexture(GL_TEXTURE_2D, material.texture);
     glUniform3fv(uniform_material_ambient, 1, glm::value_ptr(material.ambient_color));
@@ -124,5 +117,11 @@ void GameObject::Rotate(float angle, glm::vec3 axis) {
 }
 
 void GameObject::Scale(float sx, float sy, float sz) {
-    Transform(glm::scale(glm::mat4(1), glm::vec3(sx, sy, sz)));
+    Scale(glm::vec3(sx, sy, sz));
 }
+
+void GameObject::Scale(glm::vec3 scale) {
+    Transform(glm::scale(glm::mat4(1), scale));
+}
+
+
