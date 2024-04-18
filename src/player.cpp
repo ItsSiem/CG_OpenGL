@@ -57,9 +57,9 @@ void player::processDroneMovement(const char key) {
     if (key == 's')
         movement_vector = -norm_heading;
     if (key == 'a')
-        movement_vector = glm::vec3(norm_heading.z, norm_heading.y, -norm_heading.x);
+        movement_vector = glm::vec3(norm_heading.z, 0, -norm_heading.x);
     if (key == 'd')
-        movement_vector = glm::vec3(-norm_heading.z, norm_heading.y, norm_heading.x);
+        movement_vector = glm::vec3(-norm_heading.z, 0, norm_heading.x);
     if (key == 'q')
         movement_vector = glm::vec3(0, 1, 0);
     if (key == 'e')

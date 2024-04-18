@@ -69,6 +69,8 @@ void Render()
 
 void Animate() {
     objects[6].Rotate(1, glm::vec3(0, 1, 0));
+    objects[objects.size() - 1].Rotate(1, glm::vec3(0, 1, 0));
+    objects[objects.size() - 1].Rotate(1, glm::vec3(1, 0, 0));
 
     objects[7].position += glm::vec3(0.01, 0, 0);
     objects[7].Translate(glm::vec3(0.01, 0, 0));
@@ -123,10 +125,11 @@ void CreateObjects() {
 
     float revit_scale = 1 / 1000.0f;
 
-    GameObject desk("objects/desk.obj", glm::vec3(0, 0, -3), default_material);
+    GameObject desk("objects/desk.obj", glm::vec3(-9.5, 0, -5.5), default_material);
     desk.material.texture = loadBMP("textures/wood.bmp");
     desk.Scale(revit_scale, revit_scale, revit_scale);
     desk.Rotate(-90, glm::vec3(1, 0, 0));
+    desk.Rotate(90, glm::vec3(0, 0, 1));
     objects.push_back(desk);
 
     GameObject book_case("objects/book_case.obj", glm::vec3(0, 0, 0), default_material);
@@ -159,9 +162,9 @@ void CreateObjects() {
     GameObject teapot("objects/teapot.obj", coffee_table.position + glm::vec3(0, 0.43, 0), default_material);
     teapot.Scale(0.1, 0.1, 0.1);
     Material shiny = {
-            .ambient_color = glm::vec3(0.0, 0.0, 0.0),
-            .diffuse_color = glm::vec3(0.2, 0.2, 0.2),
-            .specular_color = glm::vec3(0.7, 0.7, 0.7),
+            .ambient_color = glm::vec3(0.1, 0.0, 0.0),
+            .diffuse_color = glm::vec3(0.2, 0.0, 0.0),
+            .specular_color = glm::vec3(0.1, 0.1, 0.1),
             .specular_power = 1024,
             .texture = loadBMP("textures/blank.bmp")
     };
@@ -180,7 +183,7 @@ void CreateObjects() {
     sofa.Rotate(-90, glm::vec3(1, 0, 0));
     objects.push_back(sofa);
 
-    Cube leg1(glm::vec3(0.1, 1, 0.1), glm::vec3(-7, 0, 0.2));
+    Cube leg1(glm::vec3(0.1, 1, 0.1), glm::vec3(-3, 0, 0.2));
     leg1.material.texture = loadBMP("textures/wood.bmp");
     objects.push_back(leg1);
 
@@ -199,6 +202,13 @@ void CreateObjects() {
     Cube tabletop(glm::vec3(0.6, 0.05, 0.8), leg1.position + glm::vec3(0.2, 0.5, 0.3));
     tabletop.material.texture = loadBMP("textures/wood.bmp");
     objects.push_back(tabletop);
+
+    GameObject torus("objects/torus.obj", coffee_table_2.position + glm::vec3(0, 0.55, 0), default_material);
+    torus.Scale(0.1, 0.1, 0.1);
+    torus.Rotate(90, glm::vec3(1, 0, 0));
+    torus.material = shiny;
+    torus.material.texture = loadBMP("textures/Yellobrk.bmp");
+    objects.push_back(torus);
 }
 
 void InitBuffers() {
